@@ -1,1 +1,4 @@
-
+In the first week we generated maps that had gates1
+using those gates to connect to other terrain maps.
+Later, we’ll use a library called curses to add a proper user interface. For now, we’ll simply print to
+the standard output and read from the standard input at the terminal using standard I/O.
