@@ -1,1 +1,19 @@
-
+We’ve parsed in a number of data files that specify certain details about how to create pokemon. Now ´
+we’re actually going to load them into our game. We’ll add the ability to encounter them, but we’ll save
+battling and capturing for next week.
+We’re going to simplify many of the mechanics of the pokemon ´ main series games (MSGs) in our implementation. The full mechanics are just too tedious, which would result in a lot of code and not much
+learning. If faithful (or more faithful) mechanics are important to you, you’re welcome to implement something more detailed than presented here.
+When walking through tall grass, each move the PC makes has a certain chance of encountering a
+pokemon. In the MSGs, different areas of the world will have different kinds of pok ´ emon in the grass, as ´
+well as other types of terrain (desert, caves, water) that may spawn pokemon, as well. We’ll simplify this ´
+by allowing any (literally any!) pokemon to spawn in any tall grass, this includes fully evolved forms and ´
+legendary and mythical pokemon. We’ve parsed in details on 1092 pok ´ emon; we’ll select from them on a ´
+uniform distribution, which means that you have an equal chance of encountering a pidgey and a mewtwo.
+As for the probability of encountering a pokemon in the tall grass, something like 10% seems reasonable, ´
+but you’re welcome to play with the number.
+The levels of encountered pokemon will increase with the manhatten distance from the origin. When ´
+distance is less than or equal to 200, minimum level is 1 and maximum level is distance / 2 (integer division).
+When distance exceeds 200, minimum level becomes (distance - 200) / 2 and maximum level is 100. With
+this formulation, at the origin, all encountered pokemon are level 1, if you go all the way east without going ´
+north or south, pokemon are generated at all possible levels, and if you then go all the way north you’ll ´
+encounter only level 100 pokemon.
