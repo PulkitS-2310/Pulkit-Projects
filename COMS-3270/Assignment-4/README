@@ -1,0 +1,19 @@
+We’ve had maps for a few weeks, and now we also have path finding. We’ve reached a point where
+we can add the player character and other Pokemon trainers. User interface comes next week, so for this ´
+week, add some routines of your own devising to move the player character (PC) around. The PC movement
+doesn’t have to be clever; you can move it randomly, along a chosen vector, whatever you like; even allow
+it to stand still (i.e., don’t bother adding movement routines for the PC at all). Just make sure that you keep
+it inside the border (don’t enter the boarder or an exit).
+The PC is represented by an ‘@’. This is simply the way things are done in Roguelike games, and
+Roguelike gamers are traditionalists, so, sorry, you can’t change this. Place your intrepid @ somewhere on
+the road. Add a switch, --numtrainers, that takes an integer count of the number of trainers to scatter
+around, and hard code a default number of trainers to place on the map when the switch is not present.
+Something close to 10 is reasonable for the size of our maps1
+. Ensure that the code you write to generate
+trainers always loads at least one hiker and at least one rival (unless numtrainers is less than 2).
+In roguelike games, NPCs are usually represented by letters, but occasionally numbers and punctuation
+are used. For the most part, there are no conventions here, beyond that each letter represents a certain class
+of bad guy, and that class usually begins with the letter that is used to represent it. For instance, it’s common
+for humans (people) to be represented by p, humanoid non-humans by h, giants (big people) by P, and
+dragons by D, but Smaug, Ruth, Falcor, Saphira, and Norbert are all Ds (and Rand would still be a p). If
+you’ve got color, you might make those Ds gold, white, white, blue, and black, respectively.
