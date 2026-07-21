@@ -1,0 +1,65 @@
+COM S 327 Programming Project 1.10/2
+Choose Your Own Assignment - Pokemon Game Extension
+
+This submission extends the Pokemon game from Assignment 1.09 with extra battle,
+item, money, catching, and Pokemon Center mechanics.
+
+Implemented features:
+
+1. PokeBucks money system
+   - The PC now has a money field called pokebucks.
+   - The player starts with 500 PokeBucks.
+   - Money is spent at PokeMarts and earned by defeating trainers.
+
+2. Trainer money rewards
+   - When the player defeats a trainer, that trainer is marked defeated.
+   - The trainer drops a random amount of PokeBucks based on the size of the
+     trainer's Pokemon party.
+   - The battle message tells the player how many PokeBucks were earned.
+
+3. PokeMart shopping
+   - PokeMarts no longer refill supplies for free.
+   - Press '>' while standing on a PokeMart to open the shop.
+   - Potions, Revives, and Pokeballs each cost 100 PokeBucks.
+   - The shop shows the player's current money and item counts.
+
+4. Improved Pokemon catching
+   - Pokeballs no longer catch wild Pokemon every time.
+   - Catch chance is based on a simplified formula using the wild Pokemon's
+     remaining HP and level.
+   - Lower HP makes a Pokemon easier to catch.
+   - Higher level Pokemon are harder to catch.
+
+5. Pokemon Center storage and party management
+   - If the player's party is full and a wild Pokemon is caught, the new Pokemon
+     is sent to Pokemon Center storage instead of fleeing.
+   - Press '>' while standing on a Pokemon Center to heal and open the center
+     menu.
+   - Press 'S' in the Pokemon Center to manage party/storage.
+   - Deposit party Pokemon with keys 1-6.
+   - Withdraw stored Pokemon with keys a-j.
+   - The player must always keep at least one Pokemon in the active party.
+
+6. Type effectiveness in battle damage
+   - Damage now uses a type effectiveness multiplier.
+   - Dual-typed defending Pokemon multiply both type effectiveness values.
+   - Battle messages report whether moves are super effective, not very
+     effective, or have no effect.
+
+Other battle controls from the previous assignment are still supported:
+
+- Fight: choose a Pokemon move.
+- Bag: use Potion, Revive, or Pokeball during battle.
+- Run: flee from wild battles only.
+- Pokemon: switch active Pokemon.
+- B: open the bag outside of battle.
+- Q: quit the game.
+
+Files changed for this extension:
+
+- character.h
+- pokemon.h
+- pokemon.cpp
+- io.cpp
+- README
+- Changelog
