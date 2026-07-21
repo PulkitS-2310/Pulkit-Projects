@@ -1,1 +1,21 @@
-
+We’ll be parsing in a number of data files that describe pokemon and their moves. The database contain- ´
+ing these files is available on Pyrite under /share/cs327/pokedex. You may copy this entire database
+to a local location if you would like using scp, for example:
+scp -r netid@pyrite.cs.iastate.edu:/share/cs327/pokedex /local/path/
+where netid is your net id and /local/path/ is the local path to the location where you want your
+files (and is NOT UNDER YOUR SOURCE TREE).
+When loading the database, your program should look in at least two and optionally three places for
+the files, only failing if none of those locations contain the database. Your program should first look under
+/share/cs327. Failing that, it should look under $HOME/.poke327/. And, optionally, it may look in
+a third place (which is NOT UNDER YOUR SOURCE TREE) of your choosing. For the second location,
+use getenv() to resolve the value of the HOME environment variable.
+NOTE: Your program must search for the database under /share/cs327 and $HOME/.poke327/
+even if you have a local copy somewhere (NOT UNDER YOUR SOURCE TREE) else. This is so it will
+load the TAs’ copies without them having to modify your sources.
+ANOTHER NOTE: DO NOT INCLUDE YOUR DATABASE UNDER YOUR SOURCE TREE!
+If you submit a solution that has the database included within it, you will be docked 4 points (out of 10)!
+The database is too large for the teaching staff to pass around 100+ copies of it and for storage limits of the
+systems that we use.
+Your program should open the database in the first location where it is found, or print an error message
+and terminate upon failure if the database is not found.
+The CSV files are located under pokedex/pokedex/data/csv/. 
