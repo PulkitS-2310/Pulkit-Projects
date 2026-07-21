@@ -1,0 +1,5 @@
+This week we’ll calculate movement paths for hikers and rivals. Both of these trainer classes can see the
+PC wherever it is and will take the shortest path to the PC so they can engage in a Pokemon battle and be ´
+the very best like no one ever was. Shortest distance is defined in terms of travel time. We’ll define travel
+times through terrain in game turns—where a game turn is the smallest length of time that can pass in the
+game.
