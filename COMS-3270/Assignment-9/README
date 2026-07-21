@@ -1,0 +1,24 @@
+The most important part of this update is to add the Pokemon battle minigame. ´
+If you are not familiar with Pokemon battles (or if you are), here’s a YouTube video of an example ´
+battle: https://www.youtube.com/watch?v=Jpdy9pZyGH4. Please don’t ask me why this video has over 2.3
+million views1
+. I don’t know. Perhaps there are a lot of professors out there having their students write
+Pokemon-inspired games? ´
+Pokemon battles are characterized by a turn-based interaction between two trainers or between a trainer ´
+(the PC) and a wild Pokemon (the ones which appear in the tall grass). Battles with a wild Pok ´ emon end ´
+with the capture of the wild Pokemon, with either the wild Pok ´ emon or the trainer fleeing the battle, or with ´
+either the wild Pokemon or all of the trainer’s Pok ´ emon getting knocked out. Trainer battles end when all ´
+of one trainer’s Pokemon are knocked out. Trainer battles cannot be fled, and pok ´ emon are not available for ´
+capture in trainer battles.
+A Pokemon is knocked out when it’s hitpoints fall to zero. A knocked out Pok ´ emon is unavailable for ´
+battle until it is revived.
+As with other areas of our game, we’ll be simplifying Pokemon game mechanics in implementing bat- ´
+tling. The most important simplifications we’ll make are that we won’t be implementing status effects (there
+are simply too many of them to make it a reasonable assignment; but, of course, you’re welcome to do it if
+you want to) and we won’t implement Pokemon abilities (for the same reason). ´
+Each party takes turns in a Pokemon battle, with each taking an action each turn. If a trainer’s chosen ´
+action is anything other than a Pokemon move, this receives maximum priority. If both moves in a turn are ´
+Pokemon moves, then the Pok ´ emon whose move has the higher priority ( ´ moves.priority) goes first; if
+both moves have the same priority, then the Pokemon with the highest speed (level adjusted) goes first, and ´
+if that is also equal, then choose one at random.. If a Pokemon is knocked out or captured before using its ´
+move, its turn is forfeit.
