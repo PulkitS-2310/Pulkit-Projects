@@ -1,1 +1,34 @@
-
+Remember way back in 1.02 when we generated a whole world full of maps and added the ability to
+movebetweenthem? Let’s add that functionality back in. But now, we’ll put it behind our new user interface
+that we built using Curses.
+The PC can now use the movement keys to move into a gate. Doing this does not leave the PC standing
+in the gate; instead, it places the PC in the in the road square directly abeam of the gate in the neighboring
+map. For example, if the west gate is at (0,10) in map (0,0), moving west into (0,10) will place the PC at
+(78,10) in map (-1,0).
+NPCs cannot move into gates.
+NPCsandtheir respective turn queues should be maintained across movement through gates. To achieve
+this, you’ll probably want a turn queue per map. Time does not (need to1) pass in a map where the PC is not
+present.
+Additionally, implement fly, as per 1.02, but using the curses interface you built last week. The command
+’f’ indicates that the player wants to fly. The interface will then need to read X and Y coordinates. Placement
+within the destination map is at your discretion (on the road is probably a good idea). Turn queues and NPC
+positions should also be maintained while flying.
+We’ll be converting (porting) our entire game into C++ this week, as well. You’ll need to rename all of
+your Cfiles with a .cpp extension (if using my makefile, do a make clobberbeforerenaming). You’ll
+also need to update your makefile. If you’re using one of my code drops (or if you’ve taken my makefile into
+your project), there is already automatic support to compile C++ code; however, you will need to change
+the link line to link with the C++ compiler (try to figure this out on your own).
+The major structs in your game should be changed to classes; this includes the map and the character
+structures. There are no requirements about access to members (public, private, etc.); you decide what you
+think is best. You also don’t need to implement methods on these classes if you don’t want to. You may
+simply take what was called struct in 1.05, call it instead class, make everything public, and make it
+compile.
+Mycode uses a pseudo-object-oriented design of the character
+t, with sub-types pc
+t and npc
+t.
+If you are using my code, you should change these so that they use C++ class inheritance (pc and npc
+should inherit from character2). If you’re not using my code, but you have a similar design, you should
+also use inheritance3.
+You donot have to do anything with heap.h and heap.c. These already include the necessary syntax
+to make them play nice with C++ and may remain as C files.
