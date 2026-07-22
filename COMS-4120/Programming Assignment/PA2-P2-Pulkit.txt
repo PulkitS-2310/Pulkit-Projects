@@ -1,0 +1,181 @@
+/*
+Plan for N = 7
+
+1. Frog 1 moves from 2 to 3
+2. Frog 2 moves from 4 to 2
+3. Frog 2 moves from 5 to 4
+4. Frog 1 moves from 3 to 5
+5. Frog 1 moves from 1 to 3
+6. Frog 1 moves from 0 to 1
+7. Frog 2 moves from 2 to 0
+8. Frog 2 moves from 4 to 2
+9. Frog 2 moves from 6 to 4
+10. Frog 1 moves from 5 to 6
+11. Frog 1 moves from 3 to 5
+12. Frog 1 moves from 1 to 3
+13. Frog 2 moves from 2 to 1
+14. Frog 2 moves from 4 to 2
+15. Frog 1 moves from 3 to 4
+
+Plan for N = 11
+
+1. Frog 1 moves from 4 to 5
+2. Frog 2 moves from 6 to 4
+3. Frog 2 moves from 7 to 6
+4. Frog 1 moves from 5 to 7
+5. Frog 1 moves from 3 to 5
+6. Frog 1 moves from 2 to 3
+7. Frog 2 moves from 4 to 2
+8. Frog 2 moves from 6 to 4
+9. Frog 2 moves from 8 to 6
+10. Frog 2 moves from 9 to 8
+11. Frog 1 moves from 7 to 9
+12. Frog 1 moves from 5 to 7
+13. Frog 1 moves from 3 to 5
+14. Frog 1 moves from 1 to 3
+15. Frog 1 moves from 0 to 1
+16. Frog 2 moves from 2 to 0
+17. Frog 2 moves from 4 to 2
+18. Frog 2 moves from 6 to 4
+19. Frog 2 moves from 8 to 6
+20. Frog 2 moves from 10 to 8
+21. Frog 1 moves from 9 to 10
+22. Frog 1 moves from 7 to 9
+23. Frog 1 moves from 5 to 7
+24. Frog 1 moves from 3 to 5
+25. Frog 1 moves from 1 to 3
+26. Frog 2 moves from 2 to 1
+27. Frog 2 moves from 4 to 2
+28. Frog 2 moves from 6 to 4
+29. Frog 2 moves from 8 to 6
+30. Frog 1 moves from 7 to 8
+31. Frog 1 moves from 5 to 7
+32. Frog 1 moves from 3 to 5
+33. Frog 2 moves from 4 to 3
+34. Frog 2 moves from 6 to 4
+35. Frog 1 moves from 5 to 6
+*/
+
+
+
+/*
+   Model parameter
+*/
+#define N 11
+#define M ((N-1)/2)
+
+bit done = 0;
+int position[N];
+
+/*
+   position[i] is
+      0: no frog in the position;
+      1: green frogs in the position;
+      2: yellow frogs in the position
+
+   green frog moves from left to right
+   yellow frog moves from right to left
+*/
+
+/*
+   Use the move function:
+   pos1: current position of the frog
+   pos2: new position of the frog after the move
+   frog: either 1 or 2 depending on its color
+*/
+#define move(pos1, pos2, frog) atomic { \
+  printf("Frog %d moves from %d to %d\n", frog, pos1, pos2); \
+  position[pos1] = 0; \
+  position[pos2] = frog; \
+}
+
+/* Write the model */
+active proctype FrogCrossing() {
+  byte i;
+  byte j;
+  bit ok;
+
+  /* initial configuration:
+     green frogs on the left, one empty middle rock, yellow frogs on the right
+  */
+  i = 0;
+  do
+  :: i < M ->
+       position[i] = 1;
+       i++
+  :: else ->
+       break
+  od;
+
+  position[M] = 0;
+
+  i = M + 1;
+  do
+  :: i < N ->
+       position[i] = 2;
+       i++
+  :: else ->
+       break
+  od;
+
+  /* explore moves nondeterministically */
+  do
+  :: done ->
+       break
+
+  :: select(i : 0 .. N-1);
+     if
+     :: (position[i] == 1 && i+1 < N && position[i+1] == 0) ->
+          move(i, i+1, 1)
+
+     :: (position[i] == 1 && i+2 < N && position[i+1] == 2 && position[i+2] == 0) ->
+          move(i, i+2, 1)
+
+     :: (position[i] == 2 && i > 0 && position[i-1] == 0) ->
+          move(i, i-1, 2)
+
+     :: (position[i] == 2 && i > 1 && position[i-1] == 1 && position[i-2] == 0) ->
+          move(i, i-2, 2)
+     fi;
+
+     /* check goal state */
+     ok = 1;
+
+     j = 0;
+     do
+     :: j < M ->
+          if
+          :: position[j] == 2 -> skip
+          :: else -> ok = 0
+          fi;
+          j++
+     :: else ->
+          break
+     od;
+
+     if
+     :: position[M] == 0 -> skip
+     :: else -> ok = 0
+     fi;
+
+     j = M + 1;
+     do
+     :: j < N ->
+          if
+          :: position[j] == 1 -> skip
+          :: else -> ok = 0
+          fi;
+          j++
+     :: else ->
+          break
+     od;
+
+     if
+     :: ok -> done = 1
+     :: else -> skip
+     fi
+  od
+}
+
+/* Write the LTL specification */
+ltl plan { [] (!done) }

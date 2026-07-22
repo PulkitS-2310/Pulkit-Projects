@@ -1,0 +1,154 @@
+/*
+
+Write your comments here. 
+
+*/
+
+
+
+mtype = { msg1, msg2, msg3, 
+          keyA, keyB, keyI,
+          agentA, agentB, agentI, 
+          nonceA, nonceB, nonceI };
+
+typedef Crypt { mtype key, content1, content2 };
+
+chan network = [0] of { mtype, /* msg# */
+                        mtype, /* receiver */
+                        Crypt };
+
+
+inline build(m, k, c1, c2) {
+  m.key = k;
+  m.content1 = c1;
+  m.content2 = c2
+}
+
+mtype partnerA;
+mtype partnerB;
+bit statusA; /* 1 = success */
+bit statusB; /* 1 = success */
+
+
+/*------------------------------------------------------------------*
+ * ALICE
+ *------------------------------------------------------------------*/
+
+active proctype Alice() {
+  mtype pkey;      /* the partner's public key           */
+  mtype pnonce;    /* nonce that we receive from partner */
+  Crypt message;   /* our message to the partner         */
+  Crypt data;      /* received message                   */
+
+  if /* choose a partner for this run */
+  :: partnerA = agentB; pkey = keyB;
+  :: partnerA = agentI; pkey = keyI;
+  fi;
+
+  /* Prepare and send first message */  
+  build(message, pkey, agentA, nonceA);
+  network ! msg1, partnerA, message;
+
+  /* Wait for answer (using pattern matching) */
+  network ? (msg2, agentA, data);
+
+  /* Proceed only if the key field of the data matches keyA and the
+     received nonce is the one that we have sent earlier */
+  (data.key == keyA) && (data.content1 == nonceA);
+
+  /* Obtain partner's nonce */
+  pnonce = data.content2;
+
+  /* Prepare and send the last message */  
+  build(message, pkey, pnonce, 0);
+  network ! msg3, partnerA, message;
+
+  statusA = 1; 
+}
+
+
+/*------------------------------------------------------------------*
+ * BOB
+ *------------------------------------------------------------------*/
+
+active proctype Bob() {
+  mtype pkey;      /* the other agent's public key                 */
+  mtype pnonce;    /* nonce that we receive from the other agent   */
+  Crypt message;   /* our encrypted message to the other party     */
+  Crypt data;      /* received encrypted message                   */
+
+  /* Complete this */
+
+  statusB = 1; 
+
+
+/*------------------------------------------------------------------*
+ * INTRUDER
+ *------------------------------------------------------------------*/
+
+bool knows_nonceA, knows_nonceB;
+
+inline copy(from, to) {
+  to.key = from.key;
+  to.content1 = from.content1;
+  to.content2 = from.content2
+}
+
+active proctype Intruder() {
+  mtype tag, recpt;
+  Crypt data, intercepted;
+
+      do
+      
+      :: network ? (tag, _, data) ->
+         if /* perhaps store the message */
+         :: copy(data, intercepted);
+         :: skip;
+         fi;
+         if /* record newly learnt nonces */
+         :: (data.key == keyI) ->
+            knows_nonceA = knows_nonceA || 
+                           (data.content1 == nonceA) || 
+                           (data.content2 == nonceA);
+            knows_nonceB = knows_nonceB || 
+                           (data.content1 == nonceB) || 
+                           (data.content2 == nonceB);
+         :: else -> skip;
+         fi;
+      :: /* Replay or send a message */
+         if /* choose message type */
+         :: tag = msg1;
+         :: tag = msg2;
+         :: tag = msg3;
+         fi;
+         if /* choose recipient */
+         :: recpt = agentA;
+         :: recpt = agentB;
+         fi;
+         if /* replay intercepted message or assemble it */
+         :: copy(intercepted, data);
+         :: if
+            :: data.key = keyA;
+            :: data.key = keyB;
+            fi;
+            if
+            ::                 data.content1 = agentA;
+            ::                 data.content1 = agentB;
+            ::                 data.content1 = agentI;
+            :: knows_nonceA -> data.content1 = nonceA;
+            :: knows_nonceB -> data.content1 = nonceB;
+            ::                 data.content1 = nonceI;
+            fi;
+            if
+            :: knows_nonceA -> data.content2 = nonceA;
+            :: knows_nonceB -> data.content2 = nonceB;
+            ::                 data.content2 = nonceI;
+            fi;
+         fi;
+
+         network ! tag, recpt, data;
+      od
+}
+
+
+/* Write your property here */

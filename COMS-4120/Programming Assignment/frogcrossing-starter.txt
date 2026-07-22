@@ -1,0 +1,45 @@
+/*
+   Write your comments here. 
+*/
+
+
+
+/*
+   Model parameter
+*/ 
+#define N 3  
+
+
+int position[N];
+
+/*
+   position[i] is 
+      0: no frog in the position;
+      1: green frogs in the position;
+      2: yellow frogs in the position 
+
+   green frog moves from left to right
+   yellow frog moves from right to left
+*/
+
+
+
+/*
+   Use the move function:
+   pos1: current position of the frog
+   pos2: new position of the frog after the move
+   frog: either 1 or 2 depending on its color
+*/ 
+#define move(pos1, pos2, frog) atomic{ printf("Frog %d moves from %d to %d\n", frog, pos1, pos2); position[pos1] = 0; position[pos2] = frog; }
+
+/*
+
+  Write the model
+
+*/
+
+
+
+/* Write the LTL specification */
+
+

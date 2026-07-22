@@ -1,0 +1,183 @@
+/*
+
+Counterexample trace (send/receive operations)
+
+1. Alice chooses partner = Intruder
+2. Alice sends msg1 to Intruder: {A, NA} encrypted with keyI
+3. Intruder sends msg1 to Bob: {A, NA} encrypted with keyB
+4. Bob receives msg1
+5. Bob sends msg2 to Alice: {NA, NB} encrypted with keyA
+6. Intruder intercepts msg2
+7. Intruder forwards msg2 to Alice
+8. Alice receives msg2 and accepts it
+9. Alice sends msg3 to Intruder: {NB} encrypted with keyI
+10. Intruder learns NB
+11. Intruder sends msg3 to Bob: {NB} encrypted with keyB
+12. Bob receives msg3 and accepts it
+
+Final bad state:
+partnerA = agentI
+partnerB = agentA
+statusA = 1
+statusB = 1
+
+Protocol fix:
+The flaw is basically in message 2, where Bob sends only <NA, NB> encrypted for Alice,
+so Alice can verify NA but cannot verify who actually sent the message. The 
+intruder can relay Bob's respose and trick Alice into accepting it.
+
+So, in order to fix the protocol, message 2 should include Bob's identity as well:
+<B,NA,NB> encrypted for Alice.
+
+In the Spin model, this means extending Bob's second message so it carries Bob's identity along with NA and NB, and updating Alice's check accordingly.
+
+This works now because Alice checks not only the nonce NA, but also that the explicitly
+identifies Bob as the sender, which prevents intruder from replaying the message as if 
+it came from someone else.
+
+*/
+
+
+
+mtype = { msg1, msg2, msg3, 
+          keyA, keyB, keyI,
+          agentA, agentB, agentI, 
+          nonceA, nonceB, nonceI };
+
+typedef Crypt { mtype key, content1, content2};
+
+chan network = [0] of { mtype, /* msg# */
+                        mtype, /* receiver */
+                        Crypt };
+
+
+inline build(m, k, c1, c2) {
+  m.key = k;
+  m.content1 = c1;
+  m.content2 = c2
+}
+mtype partnerA;
+mtype partnerB;
+bit statusA; /* 1 = success */
+bit statusB; /* 1 = success */
+
+
+/*------------------------------------------------------------------*
+ * ALICE
+ *------------------------------------------------------------------*/
+
+active proctype Alice() {
+  mtype pkey;      /* the partner's public key           */
+  mtype pnonce;    /* nonce that we receive from partner */
+  Crypt message;   /* our message to the partner         */
+  Crypt data;      /* received message                   */
+
+  if /* choose a partner for this run */
+  :: partnerA = agentB; pkey = keyB;
+  :: partnerA = agentI; pkey = keyI;
+  fi;
+
+  /* Prepare and send first message */  
+  build(message, pkey, agentA, nonceA);
+  network ! msg1, partnerA, message;
+
+  /* Wait for answer (using pattern matching) */
+  network ? (msg2, agentA, data);
+
+  /* Proceed only if the key field of the data matches keyA and the
+     received nonce is the one that we have sent earlier */
+  (data.key == keyA) && (data.content1 == nonceA);
+
+  /* Obtain partner's nonce */
+ pnonce = data.content2;
+
+  /* Prepare and send the last message */  
+  build(message, pkey, pnonce, nonceI);
+  network ! msg3, partnerA, message;
+
+  statusA = 1; 
+}
+
+
+/*------------------------------------------------------------------*
+ * BOB
+ *------------------------------------------------------------------*/
+
+active proctype Bob() {
+  mtype pkey;      /* the other agent's public key                 */
+  mtype pnonce;    /* nonce that we receive from the other agent   */
+  Crypt message;   /* our encrypted message to the other party     */
+  Crypt data;      /* received encrypted message                   */
+
+  network ? (msg1, agentB, data);   /* Receives the first message */
+  (data.key == keyB);
+
+  /* Extract partner identity and partner nonce */
+  partnerB = data.content1;
+  pnonce = data.content2;
+
+  /* Determine partner's public key */
+  if
+  :: partnerB == agentA; pkey = keyA;
+  :: partnerB == agentI; pkey = keyI;
+  fi;
+
+  /* Send second message */
+  build(message, pkey, pnonce, nonceB);
+  network ! msg2, partnerB, message;
+
+  /* Receive final message */
+  network ? (msg3, agentB, data);
+
+  /* Check final message */
+  (data.key == keyB) && (data.content1 == nonceB);
+
+  statusB = 1;
+}
+
+/*------------------------------------------------------------------*
+ * INTRUDER
+ *------------------------------------------------------------------*/
+
+active proctype Intruder() {
+  Crypt data;
+  Crypt message;
+
+  /*
+     Step 1: Intercept Alice's msg1 to the Intruder.
+     Alice sends: {A, NA}_KI
+  */
+  network ? (msg1, agentI, data);
+
+  /*
+     Step 2: Send msg1 to Bob, pretending it came from Alice.
+     Intruder sends: {A, NA}_KB
+  */
+  build(message, keyB, agentA, nonceA);
+  network ! msg1, agentB, message;
+
+  /*
+     Step 3: Intercept Bob's response to Alice.
+     Bob sends: {NA, NB}_KA
+  */
+  network ? (msg2, agentA, data);
+
+  /*
+     Step 4: Forward Bob's response to Alice.
+  */
+  network ! msg2, agentA, data;
+
+  /*
+     Step 5: Intercept Alice's final message to the Intruder.
+     Alice sends: {NB}_KI
+  */
+  network ? (msg3, agentI, data);
+
+  /*
+     Step 6: Forward NB to Bob encrypted with Bob's key.
+  */
+  build(message, keyB, data.content1, nonceI);
+  network ! msg3, agentB, message;
+}
+/* Write your property here */
+ltl p1 { [] (!((statusA == 1 && statusB == 1)) || (partnerA == agentB && partnerB == agentA)) }
