@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".WelcomePage.WelcomeActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="PingMe Signup"
+        android:textColor="?attr/actionModeSplitBackground"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textColor="?attr/actionModeSplitBackground"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/signup_email_edt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter Email Here"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username:"
+            android:textColor="?attr/actionModeSplitBackground"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/signup_username_edt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter Username Here" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password:"
+            android:textColor="?attr/actionModeSplitBackground"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/signup_password_edt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter Password Here"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Password:"
+            android:textColor="?attr/actionModeSplitBackground"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/signup_confirm_edt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Confirm Password"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/show_password_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Password"
+        android:textColor="?attr/actionMenuTextColor"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/signup_login_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textSize="18sp"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/signup_signup_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Signup"
+            android:textSize="18sp"
+            android:textColor="#ffffff" />
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

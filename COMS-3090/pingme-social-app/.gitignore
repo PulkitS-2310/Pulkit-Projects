@@ -1,0 +1,26 @@
+# IDE files
+.idea/
+*.iml
+
+# Build/generated output
+build/
+out/
+target/
+*.class
+*.apk
+*.aab
+
+# Gradle
+.gradle/
+
+# Node/dependency folders
+node_modules/
+
+# Local/private config
+local.properties
+application.properties
+.env
+
+# OS files
+.DS_Store
+Thumbs.db

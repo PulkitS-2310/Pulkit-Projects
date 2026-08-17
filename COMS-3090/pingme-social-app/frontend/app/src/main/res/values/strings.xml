@@ -1,0 +1,19 @@
+
+<resources>
+    <string name="app_name">AndroidExample</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_more">More</string>
+    <string name="nav_notifications">Notifications</string>
+    <!-- … any other strings … -->
+
+
+
+        <string name="nav_search">Search</string>
+        <string name="nav_upload">Upload</string>
+        <string name="nav_friends">Friends</string>
+        <string name="nav_profile">Profile</string>
+
+
+
+
+</resources>

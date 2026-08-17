@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/friendsFragment">
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.androidexample.Friends.FriendsFragment"
+        android:label="Friends and Chats">
+        <argument
+            android:name="USERNAME"
+            app:argType="string"
+            android:defaultValue="Guest" />
+        <action
+            android:id="@+id/action_friendsFragment_to_groupChatSelectionFragment"
+            app:destination="@id/groupChatSelectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupChatSelectionFragment"
+        android:name="com.example.androidexample.Friends.GroupChat.GroupChatSelectionFragment"
+        android:label="Select Friends">
+        <argument
+            android:name="USERNAME"
+            app:argType="string"
+            android:defaultValue="Guest" />
+    </fragment>
+
+</navigation>
